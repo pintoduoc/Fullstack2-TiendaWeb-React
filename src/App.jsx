@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import { AuthProvider } from './context/AuthContext'
 import Header from './components/Header'
 import Footer from './components/Footer'
 import Home from './pages/Home'
@@ -42,20 +43,26 @@ function App() {
   }
 
   return (
-    <Router>
-      <div className="App">
-        <Header cart={cart} removeFromCart={removeFromCart} updateQuantity={updateQuantity} />
-        <main>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/productos" element={<Products addToCart={addToCart} />} />
-            <Route path="/nosotros" element={<About />} />
-            <Route path="/contacto" element={<Contact />} />
-          </Routes>
-        </main>
-        <Footer />
-      </div>
-    </Router>
+    <AuthProvider>
+      <Router>
+        <div className="App">
+          <Header 
+            cart={cart} 
+            removeFromCart={removeFromCart} 
+            updateQuantity={updateQuantity} 
+          />
+          <main>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/productos" element={<Products addToCart={addToCart} />} />
+              <Route path="/nosotros" element={<About />} />
+              <Route path="/contacto" element={<Contact />} />
+            </Routes>
+          </main>
+          <Footer />
+        </div>
+      </Router>
+    </AuthProvider>
   )
 }
 
