@@ -43,7 +43,7 @@ const Header = ({ cart, removeFromCart, updateQuantity }) => {
     <header className="header">
       <nav className="navbar">
         <div className="nav-brand">
-          <Link to="/"><img src="public/images/ChileHub_Logo.png" alt="ChileHub" /></Link>
+          <Link to="/"><img src="images/ChileHub_Logo.png" alt="ChileHub" /></Link>
         </div>
         <ul className="nav-menu">
           <li><Link to="/">Inicio</Link></li>
