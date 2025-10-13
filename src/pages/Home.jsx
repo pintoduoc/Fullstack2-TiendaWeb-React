@@ -8,12 +8,12 @@ const Home = () => {
     <div className="home-page">
       <section className="hero">
         <div className="hero-content">
-          <h1>Bienvenido a Nuestra Tienda</h1>
-          <p>Descubre los mejores productos al mejor precio</p>
+          <h1>Bienvenido a ChileHub</h1>
+          <p>Descubre el mejor contenido Safe For Work (SFW), a los mejores precios</p>
           
           {!user && (
             <div className="auth-section">
-              <p>¡Únete a nuestra comunidad y disfruta de beneficios exclusivos!</p>
+              <p>¡Suscribete a ChileHub y disfruta de nuestro contenido!</p>
               <div className="auth-buttons-hero">
                 <Link to="/productos" className="cta-button">
                   Explorar Productos

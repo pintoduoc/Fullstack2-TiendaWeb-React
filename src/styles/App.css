@@ -38,6 +38,10 @@ body {
   font-size: 1.5rem;
   font-weight: bold;
 }
+.nav-brand img {
+  height: 90px;
+  width: auto;
+}
 
 .nav-menu {
   display: flex;
@@ -80,7 +84,7 @@ main {
 
 /* Home Page */
 .hero {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: url('/public/images/bg_subs.webp') no-repeat center center/cover;
   color: white;
   padding: 4rem 2rem;
   text-align: center;
