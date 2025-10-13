@@ -1,11 +1,23 @@
-import React from "react";
+import React, { useState } from "react";
+import PaymentForm from "./PaymentForm";
 
 const Cart = ({ isOpen, onClose, cart, removeFromCart, updateQuantity }) => {
-  // ✅ Evita errores si el carrito está vacío o indefinido
-  const total = cart && cart.length > 0 
-    ? cart.reduce((sum, item) => sum + item.price * item.quantity, 0)
-    : 0;
+  const [isPaymentOpen, setIsPaymentOpen] = useState(false);
 
+  // Calcula el total
+  const total =
+    cart && cart.length > 0
+      ? cart.reduce((sum, item) => sum + item.price * item.quantity, 0)
+      : 0;
+
+  // Acción al confirmar pago
+  const handlePaymentConfirm = (data) => {
+    alert(`✅ Pago confirmado por ${data.name} (${data.email})`);
+    setIsPaymentOpen(false);
+    onClose(); // Cierra el carrito después del pago
+  };
+
+  // Si el carrito está cerrado, no se renderiza
   if (!isOpen) return null;
 
   return (
@@ -26,26 +38,36 @@ const Cart = ({ isOpen, onClose, cart, removeFromCart, updateQuantity }) => {
           ) : (
             cart.map((item) => (
               <div key={item.id} className="cart-item">
-                <img src={item.image} alt={item.name} className="cart-item-img" />
+                <img
+                  src={item.image}
+                  alt={item.name}
+                  className="cart-item-img"
+                />
 
                 <div className="item-details">
                   <h4>{item.name}</h4>
                   <p>Precio unitario: ${item.price.toFixed(2)}</p>
                   <p>
-                    Subtotal: <strong>${(item.price * item.quantity).toFixed(2)}</strong>
+                    Subtotal:{" "}
+                    <strong>${(item.price * item.quantity).toFixed(2)}</strong>
                   </p>
                 </div>
 
                 <div className="quantity-controls">
                   <button
                     onClick={() =>
-                      item.quantity > 1 && updateQuantity(item.id, item.quantity - 1)
+                      item.quantity > 1 &&
+                      updateQuantity(item.id, item.quantity - 1)
                     }
                   >
                     −
                   </button>
                   <span>{item.quantity}</span>
-                  <button onClick={() => updateQuantity(item.id, item.quantity + 1)}>
+                  <button
+                    onClick={() =>
+                      updateQuantity(item.id, item.quantity + 1)
+                    }
+                  >
                     +
                   </button>
                 </div>
@@ -67,8 +89,22 @@ const Cart = ({ isOpen, onClose, cart, removeFromCart, updateQuantity }) => {
             <div className="cart-total">
               <strong>Total a pagar: ${total.toFixed(2)}</strong>
             </div>
-            <button className="checkout-btn">Proceder al Pago</button>
+            <button
+              className="checkout-btn"
+              onClick={() => setIsPaymentOpen(true)}
+            >
+              Proceder al Pago
+            </button>
           </div>
+        )}
+
+        {/* 🔹 FORMULARIO DE PAGO */}
+        {isPaymentOpen && (
+          <PaymentForm
+            total={total}
+            onClose={() => setIsPaymentOpen(false)}
+            onConfirm={handlePaymentConfirm}
+          />
         )}
       </div>
     </div>
