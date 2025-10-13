@@ -1,44 +1,23 @@
 export const products = [
   {
     id: 1,
-    name: "Producto 1",
+    name: "Suscripción Mensual",
     price: 29.99,
-    image: "/images/product1.jpg",
-    description: "Descripción del producto 1"
+    image: "/images/sub_mensual.png",
+    description: "Acceso completo al servicio durante 1 mes. Renovación automática cada mes."
   },
   {
     id: 2,
-    name: "Producto 2",
-    price: 39.99,
-    image: "/images/product2.jpg",
-    description: "Descripción del producto 2"
+    name: "Suscripción Semanal",
+    price: 9.99,
+    image: "/images/sub_semanal.png",
+    description: "Acceso completo al servicio durante 1 semana. Ideal para probar el servicio."
   },
   {
     id: 3,
-    name: "Producto 3",
-    price: 19.99,
-    image: "/images/product3.jpg",
-    description: "Descripción del producto 3"
-  },
-  {
-    id: 4,
-    name: "Producto 4",
-    price: 49.99,
-    image: "/images/product4.jpg",
-    description: "Descripción del producto 4"
-  },
-  {
-    id: 5,
-    name: "Producto 5",
-    price: 24.99,
-    image: "/images/product5.jpg",
-    description: "Descripción del producto 5"
-  },
-  {
-    id: 6,
-    name: "Producto 6",
-    price: 34.99,
-    image: "/images/product6.jpg",
-    description: "Descripción del producto 6"
+    name: "Suscripción Anual",
+    price: 249.99,
+    image: "/images/sub_anual.jpeg",
+    description: "Acceso completo al servicio durante 1 año con un precio reducido."
   }
-]
+];

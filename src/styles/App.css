@@ -38,6 +38,7 @@ body {
   font-size: 1.5rem;
   font-weight: bold;
 }
+
 .nav-brand img {
   height: 90px;
   width: auto;
@@ -216,6 +217,7 @@ main {
   height: 100%;
   padding: 2rem;
   overflow-y: auto;
+  color: #000 !important; /* Asegura texto negro en todo el modal */
 }
 
 .cart-header {
@@ -225,6 +227,7 @@ main {
   margin-bottom: 2rem;
   border-bottom: 1px solid #ddd;
   padding-bottom: 1rem;
+  color: #000 !important;
 }
 
 .close-btn {
@@ -232,6 +235,7 @@ main {
   border: none;
   font-size: 2rem;
   cursor: pointer;
+  color: #000 !important;
 }
 
 .cart-item {
@@ -240,6 +244,7 @@ main {
   gap: 1rem;
   padding: 1rem 0;
   border-bottom: 1px solid #eee;
+  color: #000 !important;
 }
 
 .cart-item img {
@@ -251,12 +256,14 @@ main {
 
 .item-details {
   flex: 1;
+  color: #000 !important;
 }
 
 .quantity-controls {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  color: #000 !important;
 }
 
 .quantity-controls button {
@@ -265,6 +272,7 @@ main {
   padding: 0.25rem 0.5rem;
   cursor: pointer;
   border-radius: 3px;
+  color: #000 !important;
 }
 
 .remove-btn {
@@ -280,12 +288,14 @@ main {
   margin-top: 2rem;
   padding-top: 1rem;
   border-top: 1px solid #ddd;
+  color: #000 !important;
 }
 
 .cart-total {
   text-align: center;
   margin-bottom: 1rem;
   font-size: 1.2rem;
+  color: #000 !important;
 }
 
 .checkout-btn {
@@ -338,3 +348,9 @@ main {
 }
 
 @import './components.css';
+
+/* --- Texto negro en todo el carrito --- */
+.cart-modal,
+.cart-modal * {
+  color: #000 !important;
+}
