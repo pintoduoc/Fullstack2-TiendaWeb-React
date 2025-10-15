@@ -23,7 +23,7 @@ const Home = () => {
                 </button>
               </div>
               <p className="register-prompt">
-                ¿No tienes cuenta? <span>¡Regístrate y obtén un 10% de descuento!</span>
+                ¿No tienes cuenta? <span>¡Regístrate y obtén un descuento del 10%!</span>
               </p>
             </div>
           )}
