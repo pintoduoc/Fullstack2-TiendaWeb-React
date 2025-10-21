@@ -1,39 +1,25 @@
-import { useState } from 'react'
-import ProductCard from '../components/ProductCard'
-import { products } from '../data/products'
+import { products } from "../data/products";
+import { useAuth } from "../context/AuthContext";
 
-const Products = ({ addToCart }) => {
-  const [searchTerm, setSearchTerm] = useState('')
-
-  const filteredProducts = products.filter(product =>
-    product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    product.description.toLowerCase().includes(searchTerm.toLowerCase())
-  )
+export default function Products() {
+  const { purchaseMembership } = useAuth();
 
   return (
-    <div className="products-page">
-      <div className="products-header">
-        <h1>Nuestros Productos</h1>
-        <input
-          type="text"
-          placeholder="Buscar productos..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="search-input"
-        />
-      </div>
-
-      <div className="products-grid">
-        {filteredProducts.map(product => (
-          <ProductCard
-            key={product.id}
-            product={product}
-            onAddToCart={addToCart}
-          />
+    <div className="products">
+      <h1>Planes de Suscripción</h1>
+      <div className="product-grid">
+        {products.map((product) => (
+          <div key={product.id} className="product-card">
+            <img src={product.image} alt={product.name} />
+            <h2>{product.name}</h2>
+            <p>{product.description}</p>
+            <p><strong>${product.price}</strong></p>
+            <button onClick={() => purchaseMembership(product)}>
+              Comprar
+            </button>
+          </div>
         ))}
       </div>
     </div>
-  )
+  );
 }
-
-export default Products

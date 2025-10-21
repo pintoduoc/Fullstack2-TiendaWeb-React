@@ -1,0 +1,194 @@
+/* =========================================================
+   🌟 SECCIÓN: MI MEMBRESÍA (VERSIÓN CORREGIDA)
+   ========================================================= */
+
+.membership-container {
+  max-width: 850px;
+  margin: 3rem auto;
+  padding: 2rem;
+  background: #ffffffee;
+  border-radius: 20px;
+  box-shadow: 0 6px 30px rgba(0, 0, 0, 0.1);
+  animation: fadeIn 0.5s ease-in-out;
+  backdrop-filter: blur(6px);
+}
+
+.membership-container h1,
+.membership-container h2 {
+  text-align: center;
+  color: #222;
+  margin-bottom: 1.2rem;
+  font-weight: 700;
+}
+
+.membership-card {
+  background: linear-gradient(135deg, #f9fafb, #eef2f3);
+  border: 1px solid #ddd;
+  padding: 2rem;
+  border-radius: 18px;
+  text-align: center;
+  transition: all 0.3s ease-in-out;
+  margin-bottom: 2rem;
+}
+
+.membership-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.1);
+}
+
+.membership-card h2 {
+  margin-bottom: 1rem;
+  color: #0a7b83;
+  font-size: 1.4rem;
+}
+
+.membership-card p {
+  margin: 0.3rem 0;
+  font-size: 1rem;
+  color: #444;
+}
+
+.cancel-btn {
+  background: #ff4d4f;
+  color: white;
+  border: none;
+  padding: 0.9rem 2rem;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 1rem;
+  margin-top: 1.5rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 3px 10px rgba(255, 77, 79, 0.3);
+}
+
+.cancel-btn:hover {
+  background: #e84142;
+  transform: scale(1.03);
+}
+
+.no-membership {
+  background: #f1f3f5;
+  padding: 1rem 1.5rem;
+  border-radius: 12px;
+  text-align: center;
+  font-size: 1rem;
+  color: #555;
+  margin-bottom: 2rem;
+}
+
+.history-section {
+  margin-top: 2.5rem;
+  background: #fafbfc;
+  padding: 1.8rem;
+  border-radius: 14px;
+  border: 1px solid #eee;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.03);
+}
+
+.history-section h2 {
+  text-align: center;
+  color: #333;
+  margin-bottom: 1rem;
+}
+
+.history-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.history-list li {
+  background: #f8f9fa;
+  border-radius: 10px;
+  margin-bottom: 0.7rem;
+  padding: 0.8rem 1rem;
+  font-size: 0.95rem;
+  color: #333;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: background 0.3s ease;
+}
+
+.history-list li:hover {
+  background: #e9f2f3;
+}
+
+/* TOTAL GASTADO: ahora con pseudo-elemento para degradado seguro */
+.total-spent {
+  text-align: center;
+  margin-top: 3rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #ddd;
+}
+
+.total-spent h2 {
+  color: #0a7b83;
+  margin-bottom: 0.5rem;
+}
+
+/* contenedor del número para poder aplicar fallback y degradado sin -webkit-background-clip */
+.total-amount {
+  display: inline-block;
+  position: relative;
+  font-size: 2.2rem;
+  font-weight: bold;
+  color: #00796b; /* fallback sólido */
+  padding: 0 0.25rem;
+  line-height: 1;
+}
+
+/* pseudo elemento con degradado que se superpone y se recorta con mix-blend (compatible y sin -webkit props) */
+.total-amount::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, #00c6ff, #0072ff);
+  z-index: -1;
+  border-radius: 2px;
+  filter: saturate(1.1);
+  opacity: 1;
+}
+
+/* Si quieres que el número se vea con el degradado sobre fondo blanco,
+   envuelve .total-amount en un fondo claro; el fallback color seguirá funcionando. */
+
+/* ✨ Animación */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 📱 RESPONSIVE DESIGN */
+@media (max-width: 768px) {
+  .membership-container {
+    margin: 1.5rem;
+    padding: 1.5rem;
+  }
+
+  .membership-card,
+  .history-section {
+    padding: 1rem;
+  }
+
+  .membership-card h2 {
+    font-size: 1.2rem;
+  }
+
+  .cancel-btn {
+    width: 100%;
+    padding: 1rem;
+    font-size: 1rem;
+  }
+
+  .total-amount {
+    font-size: 1.6rem;
+  }
+}

@@ -1,0 +1,29 @@
+.admin-dashboard {
+  padding: 2rem;
+  text-align: center;
+}
+
+.admin-links {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.admin-btn {
+  background-color: #007bff;
+  color: white;
+  padding: 0.8rem 1.5rem;
+  border-radius: 6px;
+  text-decoration: none;
+  transition: 0.3s;
+}
+
+.admin-btn:hover {
+  background-color: #0056b3;
+}
+
+.admin-page {
+  padding: 2rem;
+  text-align: center;
+}

@@ -1,36 +1,42 @@
-import { useState } from 'react'
-import { useAuth } from '../context/AuthContext'
+import { useState } from "react";
+import { useAuth } from "../context/AuthContext";
 
 const Login = ({ onClose, switchToRegister }) => {
   const [formData, setFormData] = useState({
-    email: '',
-    password: ''
-  })
-  const { login } = useAuth()
+    email: "",
+    password: "",
+  });
+  const [error, setError] = useState("");
+  const { login } = useAuth();
 
   const handleChange = (e) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
-    })
-  }
+      [e.target.name]: e.target.value,
+    });
+  };
 
   const handleSubmit = (e) => {
-    e.preventDefault()
-    // Simulación de login - reemplaza con tu API real
-    login({
-      id: 1,
-      name: 'Usuario Demo',
-      email: formData.email
-    })
-    onClose()
-  }
+    e.preventDefault();
+    setError("");
+
+    const result = login(formData.email, formData.password);
+    if (!result?.success) {
+      setError(result?.message || "❌ Credenciales incorrectas");
+      return;
+    }
+
+    onClose(); // cerrar modal
+  };
 
   return (
     <div className="auth-modal">
       <div className="auth-content">
-        <button className="close-btn" onClick={onClose}>×</button>
+        <button className="close-btn" onClick={onClose}>
+          ×
+        </button>
         <h2>Iniciar Sesión</h2>
+
         <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label>Email</label>
@@ -42,6 +48,7 @@ const Login = ({ onClose, switchToRegister }) => {
               required
             />
           </div>
+
           <div className="form-group">
             <label>Contraseña</label>
             <input
@@ -52,17 +59,23 @@ const Login = ({ onClose, switchToRegister }) => {
               required
             />
           </div>
-          <button type="submit" className="submit-btn">Iniciar Sesión</button>
+
+          {error && <p className="error-message">{error}</p>}
+
+          <button type="submit" className="submit-btn">
+            Iniciar Sesión
+          </button>
         </form>
+
         <p className="auth-switch">
-          ¿No tienes cuenta? 
+          ¿No tienes cuenta?
           <button className="switch-btn" onClick={switchToRegister}>
             Regístrate aquí
           </button>
         </p>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Login
+export default Login;

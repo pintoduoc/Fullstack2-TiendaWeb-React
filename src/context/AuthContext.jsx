@@ -1,49 +1,232 @@
-import { createContext, useContext, useState, useEffect } from 'react'
+import { createContext, useContext, useEffect, useState } from "react";
+import { products } from "../data/products";
 
-const AuthContext = createContext()
+const AuthContext = createContext();
+export const useAuth = () => useContext(AuthContext);
 
-export const useAuth = () => {
-  return useContext(AuthContext)
-}
+// 🛡️ Admins definidos en el código (solo editables aquí)
+const ADMIN_CREDENTIALS = [
+  {
+    email: "adminhubbenjaminpinto@chilehub.com",
+    password: "Benjamin123@", // 🔐 cámbialo solo aquí
+    role: "admin",
+    name: "Benjamin Pinto",
+  },
+  {
+    email: "adminhuboscarsepulveda@chilehub.com",
+    password: "Oscar123@",
+    role: "admin",
+    name: "Oscar Sepúlveda",
+  },
+];
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null)
-  const [loading, setLoading] = useState(true)
+  // 🔄 Cargar datos desde localStorage al iniciar
+  const [user, setUser] = useState(() => {
+    const saved = localStorage.getItem("user");
+    return saved ? JSON.parse(saved) : null;
+  });
+
+  const [users, setUsers] = useState(() => {
+    const saved = localStorage.getItem("users");
+    return saved ? JSON.parse(saved) : [];
+  });
+
+  // 🔄 Persistencia automática en localStorage
+  useEffect(() => {
+    localStorage.setItem("users", JSON.stringify(users));
+  }, [users]);
 
   useEffect(() => {
-    const savedUser = localStorage.getItem('user')
-    if (savedUser) {
-      setUser(JSON.parse(savedUser))
+    if (user) {
+      localStorage.setItem("user", JSON.stringify(user));
+    } else {
+      localStorage.removeItem("user");
     }
-    setLoading(false)
-  }, [])
+  }, [user]);
 
-  const login = (userData) => {
-    setUser(userData)
-    localStorage.setItem('user', JSON.stringify(userData))
-  }
+  // 🔐 LOGIN
+  const login = (email, password) => {
+    // 1️⃣ Verificar si es un admin
+    const admin = ADMIN_CREDENTIALS.find((a) => a.email === email);
+    if (admin) {
+      if (password === admin.password) {
+        setUser(admin);
+        localStorage.setItem("user", JSON.stringify(admin));
+        alert(`✅ Bienvenido administrador ${admin.name}`);
+        return { success: true };
+      } else {
+        alert("❌ Contraseña de administrador incorrecta.");
+        return { success: false };
+      }
+    }
 
-  const register = (userData) => {
-    setUser(userData)
-    localStorage.setItem('user', JSON.stringify(userData))
-  }
+    // 2️⃣ Usuarios normales
+    const existingUser = users.find(
+      (u) => u.email === email && u.password === password
+    );
+    if (existingUser) {
+      setUser(existingUser);
+      localStorage.setItem("user", JSON.stringify(existingUser));
+      alert(`✅ Bienvenido ${existingUser.name}`);
+      return { success: true };
+    } else {
+      alert("❌ Credenciales incorrectas.");
+      return { success: false };
+    }
+  };
 
+  // 🚪 LOGOUT
   const logout = () => {
-    setUser(null)
-    localStorage.removeItem('user')
-  }
+    setUser(null);
+    localStorage.removeItem("user");
+  };
 
-  const value = {
-    user,
-    login,
-    register,
-    logout,
-    loading
-  }
+  // 🆕 REGISTRO (desde el modal de registro)
+  const register = (newUser) => {
+    const adminEmails = ADMIN_CREDENTIALS.map((a) => a.email);
+    if (adminEmails.includes(newUser.email)) {
+      alert("❌ No puedes crear un usuario administrador desde aquí.");
+      return;
+    }
+
+    if (users.some((u) => u.email === newUser.email)) {
+      alert("❌ Ese correo ya está registrado.");
+      return;
+    }
+
+    const newUserData = {
+      ...newUser,
+      role: "user",
+      membership: null,
+      history: [],
+      totalSpent: 0,
+    };
+
+    setUsers([...users, newUserData]);
+    alert("✅ Usuario registrado correctamente.");
+  };
+
+  // ➕ Agregar usuario desde el panel admin
+  const addUser = (newUser) => {
+    const adminEmails = ADMIN_CREDENTIALS.map((a) => a.email);
+    if (adminEmails.includes(newUser.email)) {
+      alert("❌ No puedes crear un usuario administrador desde aquí.");
+      return;
+    }
+
+    if (users.some((u) => u.email === newUser.email)) {
+      alert("❌ Ese usuario ya existe.");
+      return;
+    }
+
+    const newUserData = {
+      ...newUser,
+      role: "user",
+      membership: null,
+      history: [],
+      totalSpent: 0,
+    };
+
+    setUsers([...users, newUserData]);
+    alert("✅ Usuario agregado correctamente.");
+  };
+
+  // ❌ Eliminar usuario
+  const removeUser = (email) => {
+    setUsers(users.filter((u) => u.email !== email));
+  };
+
+  // ⭐ Dar membresía (admin o compra)
+  const giveMembership = (email, productId) => {
+    const product = products.find((p) => p.id === parseInt(productId));
+    if (!product) return;
+
+    const durationDays =
+      product.name.includes("Semanal")
+        ? 7
+        : product.name.includes("Mensual")
+        ? 30
+        : 365;
+
+    const expirationDate = new Date();
+    expirationDate.setDate(expirationDate.getDate() + durationDays);
+
+    const updatedUsers = users.map((u) =>
+      u.email === email
+        ? {
+            ...u,
+            membership: {
+              id: product.id,
+              name: product.name,
+              expiresAt: expirationDate.toISOString(),
+            },
+            history: [
+              ...(u.history || []),
+              {
+                action: "purchase",
+                name: product.name,
+                date: new Date().toISOString(),
+              },
+            ],
+            totalSpent: (u.totalSpent || 0) + product.price,
+          }
+        : u
+    );
+
+    setUsers(updatedUsers);
+  };
+
+  // ❌ Quitar membresía
+  const removeMembership = (email) => {
+    const updatedUsers = users.map((u) =>
+      u.email === email
+        ? {
+            ...u,
+            membership: null,
+            history: [
+              ...(u.history || []),
+              {
+                action: "cancel",
+                name: u.membership?.name || "Membresía",
+                date: new Date().toISOString(),
+              },
+            ],
+          }
+        : u
+    );
+    setUsers(updatedUsers);
+  };
+
+  // 🕓 Verificar expiración automática de membresías
+  useEffect(() => {
+    const now = new Date();
+    const updated = users.map((u) => {
+      if (u.membership && new Date(u.membership.expiresAt) < now) {
+        return { ...u, membership: null };
+      }
+      return u;
+    });
+    setUsers(updated);
+  }, []);
 
   return (
-    <AuthContext.Provider value={value}>
+    <AuthContext.Provider
+      value={{
+        user,
+        users,
+        login,
+        logout,
+        register,
+        addUser,
+        removeUser,
+        giveMembership,
+        removeMembership,
+        setUsers,
+        setUser,
+      }}
+    >
       {children}
     </AuthContext.Provider>
-  )
-}
+  );
+};

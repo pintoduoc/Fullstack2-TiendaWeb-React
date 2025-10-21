@@ -1,45 +1,45 @@
-import { useState } from 'react'
-import { useAuth } from '../context/AuthContext'
+import { useState } from "react";
+import { useAuth } from "../context/AuthContext";
 
 const Register = ({ onClose, switchToLogin }) => {
+  const { register } = useAuth();
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    password: '',
-    confirmPassword: ''
-  })
-  const { register } = useAuth()
+    name: "",
+    email: "",
+    password: "",
+  });
+  const [error, setError] = useState("");
 
   const handleChange = (e) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
-    })
-  }
+      [e.target.name]: e.target.value,
+    });
+  };
 
   const handleSubmit = (e) => {
-    e.preventDefault()
-    if (formData.password !== formData.confirmPassword) {
-      alert('Las contraseñas no coinciden')
-      return
+    e.preventDefault();
+    setError("");
+
+    const result = register(formData);
+    if (result?.success) {
+      onClose();
+    } else {
+      setError(result?.message || "❌ Error al registrar usuario");
     }
-    // Simulación de registro - reemplaza con tu API real
-    register({
-      id: Date.now(),
-      name: formData.name,
-      email: formData.email
-    })
-    onClose()
-  }
+  };
 
   return (
     <div className="auth-modal">
       <div className="auth-content">
-        <button className="close-btn" onClick={onClose}>×</button>
+        <button className="close-btn" onClick={onClose}>
+          ×
+        </button>
         <h2>Crear Cuenta</h2>
+
         <form onSubmit={handleSubmit}>
           <div className="form-group">
-            <label>Nombre Completo</label>
+            <label>Nombre</label>
             <input
               type="text"
               name="name"
@@ -48,6 +48,7 @@ const Register = ({ onClose, switchToLogin }) => {
               required
             />
           </div>
+
           <div className="form-group">
             <label>Email</label>
             <input
@@ -58,6 +59,7 @@ const Register = ({ onClose, switchToLogin }) => {
               required
             />
           </div>
+
           <div className="form-group">
             <label>Contraseña</label>
             <input
@@ -68,27 +70,23 @@ const Register = ({ onClose, switchToLogin }) => {
               required
             />
           </div>
-          <div className="form-group">
-            <label>Confirmar Contraseña</label>
-            <input
-              type="password"
-              name="confirmPassword"
-              value={formData.confirmPassword}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <button type="submit" className="submit-btn">Registrarse</button>
+
+          {error && <p className="error-message">{error}</p>}
+
+          <button type="submit" className="submit-btn">
+            Registrarme
+          </button>
         </form>
+
         <p className="auth-switch">
-          ¿Ya tienes cuenta? 
+          ¿Ya tienes cuenta?
           <button className="switch-btn" onClick={switchToLogin}>
             Inicia sesión aquí
           </button>
         </p>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Register
+export default Register;
