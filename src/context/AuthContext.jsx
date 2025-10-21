@@ -159,6 +159,8 @@ export const AuthProvider = ({ children }) => {
             membership: {
               id: product.id,
               name: product.name,
+              price: product.price,
+              description: product.description,
               expiresAt: expirationDate.toISOString(),
             },
             history: [
@@ -196,9 +198,72 @@ export const AuthProvider = ({ children }) => {
         : u
     );
     setUsers(updatedUsers);
+
+    // Si el usuario actual coincide, sincronizar también su estado local
+    if (user && user.email === email) {
+      const updatedCurrent = {
+        ...user,
+        membership: null,
+        history: [
+          ...(user.history || []),
+          {
+            action: "cancel",
+            name: user.membership?.name || "Membresía",
+            date: new Date().toISOString(),
+          },
+        ],
+      };
+      setUser(updatedCurrent);
+      localStorage.setItem("user", JSON.stringify(updatedCurrent));
+    }
   };
 
-  // 🕓 Verificar expiración automática de membresías
+  // � Comprar membresía (usuario actual)
+  const purchaseMembership = (product) => {
+    if (!user) {
+      alert("❌ Debes iniciar sesión para comprar una membresía.");
+      return;
+    }
+
+    // Otorgar membresía al usuario actual
+    giveMembership(user.email, product.id);
+
+    // Alinear el estado del usuario actual (ya que se persiste por separado)
+    const durationDays = product.name.includes("Semanal")
+      ? 7
+      : product.name.includes("Mensual")
+      ? 30
+      : 365;
+
+    const expirationDate = new Date();
+    expirationDate.setDate(expirationDate.getDate() + durationDays);
+
+    const updatedCurrent = {
+      ...user,
+      membership: {
+        id: product.id,
+        name: product.name,
+        price: product.price,
+        description: product.description,
+        expiresAt: expirationDate.toISOString(),
+      },
+      history: [
+        ...(user.history || []),
+        {
+          action: "purchase",
+          name: product.name,
+          date: new Date().toISOString(),
+        },
+      ],
+      totalSpent: (user.totalSpent || 0) + product.price,
+    };
+
+    setUser(updatedCurrent);
+    localStorage.setItem("user", JSON.stringify(updatedCurrent));
+    alert(`✅ Has comprado la membresía ${product.name}. ¡Disfrútala!`);
+  };
+
+  // �🕓 Verificar expiración automática de membresías
   useEffect(() => {
     const now = new Date();
     const updated = users.map((u) => {
@@ -222,6 +287,7 @@ export const AuthProvider = ({ children }) => {
         removeUser,
         giveMembership,
         removeMembership,
+        purchaseMembership,
         setUsers,
         setUser,
       }}

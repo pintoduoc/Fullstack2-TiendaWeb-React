@@ -134,15 +134,16 @@ main {
 
 .products-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 2rem;
 }
 
 /* Product Card */
 .product-card {
   border: 1px solid #ddd;
-  border-radius: 10px;
+  border-radius: 12px;
   overflow: hidden;
+  background: #fff;
   transition: transform 0.3s, box-shadow 0.3s;
 }
 
@@ -167,7 +168,7 @@ main {
   padding: 1rem;
 }
 
-.product-info h3 {
+.product-info h2 {
   margin-bottom: 0.5rem;
 }
 
@@ -197,7 +198,6 @@ main {
 .add-to-cart-btn:hover {
   background: #2980b9;
 }
-
 /* Cart Styles */
 .cart-overlay {
   position: fixed;

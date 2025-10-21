@@ -1,23 +1,13 @@
 import { products } from "../data/products";
-import { useAuth } from "../context/AuthContext";
+import ProductCard from "../components/ProductCard";
 
-export default function Products() {
-  const { purchaseMembership } = useAuth();
-
+export default function Products({ addToCart }) {
   return (
     <div className="products">
       <h1>Planes de Suscripción</h1>
-      <div className="product-grid">
+      <div className="products-grid">
         {products.map((product) => (
-          <div key={product.id} className="product-card">
-            <img src={product.image} alt={product.name} />
-            <h2>{product.name}</h2>
-            <p>{product.description}</p>
-            <p><strong>${product.price}</strong></p>
-            <button onClick={() => purchaseMembership(product)}>
-              Comprar
-            </button>
-          </div>
+          <ProductCard key={product.id} product={product} onAddToCart={addToCart} />
         ))}
       </div>
     </div>
