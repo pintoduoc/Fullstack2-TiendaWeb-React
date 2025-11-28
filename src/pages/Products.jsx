@@ -1,22 +1,22 @@
 import ProductCard from "../components/ProductCard";
-import { useEffect, useState } from "react";
+import { useAuth } from "../context/AuthContext";
 
 export default function Products({ addToCart }) {
- const [products, setProducts] = useState([])
- useEffect(()=>{
-  fetch("http://localhost:4000/api/productos")
-  .then((response)=>response.json())
-  .then((data)=> setProducts (data))
- },
-[])
+  // 2. Extraer los productos YA cargados del contexto (no usar useState ni useEffect aquí)
+  const { products } = useAuth(); 
 
   return (
     <div className="products">
       <h1>Planes de Suscripción</h1>
       <div className="products-grid">
-        {products.map((product) => (
-          <ProductCard key={product.id} product={product} onAddToCart={addToCart} />
-        ))}
+        {/* 3. Renderizar la lista que viene del contexto */}
+        {products && products.length > 0 ? (
+          products.map((product) => (
+            <ProductCard key={product.id} product={product} onAddToCart={addToCart} />
+          ))
+        ) : (
+          <p>Cargando productos...</p>
+        )}
       </div>
     </div>
   );

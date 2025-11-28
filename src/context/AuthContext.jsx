@@ -1,5 +1,4 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { products } from "../data/products";
 
 const AuthContext = createContext();
 export const useAuth = () => useContext(AuthContext);
@@ -31,6 +30,43 @@ export const AuthProvider = ({ children }) => {
     const saved = localStorage.getItem("users");
     return saved ? JSON.parse(saved) : [];
   });
+
+  const [products, setProducts] = useState([]);
+// 🔄 CARGAR PRODUCTOS DESDE SPRING BOOT
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await fetch("http://localhost:8080/products");
+        if (response.ok) {
+          const data = await response.json();
+          console.log("📦 Datos recibidos del backend:", data); // <--- AGREGADO PARA DEPURAR
+
+          // INTENTO 1: Buscar en _embedded.productList
+          let loadedProducts = [];
+          if (data._embedded && data._embedded.productList) {
+            loadedProducts = data._embedded.productList;
+          } 
+          // INTENTO 2: A veces Spring usa el nombre de la clase en plural o minúsculas
+          else if (data._embedded && data._embedded.productModelList) {
+            loadedProducts = data._embedded.productModelList;
+          }
+          // INTENTO 3: Si es un array directo (por si acaso cambiaste el controller)
+          else if (Array.isArray(data)) {
+            loadedProducts = data;
+          }
+
+          console.log("✅ Productos procesados:", loadedProducts); // <--- VERIFICA ESTO EN CONSOLA
+          setProducts(loadedProducts);
+        } else {
+          console.error("❌ Error al cargar productos: Estado", response.status);
+        }
+      } catch (error) {
+        console.error("❌ Error de conexión con el backend Java:", error);
+      }
+    };
+
+    fetchProducts();
+  }, []);
 
   // 🔄 Persistencia automática en localStorage
   useEffect(() => {
@@ -139,16 +175,11 @@ export const AuthProvider = ({ children }) => {
 
   // ⭐ Dar membresía (admin o compra)
   const giveMembership = (email, productId) => {
-    const product = products.find((p) => p.id === parseInt(productId));
+    const product = products.find((p) => p.id === Number(productId));
+    
     if (!product) return;
 
-    const durationDays =
-      product.name.includes("Semanal")
-        ? 7
-        : product.name.includes("Mensual")
-        ? 30
-        : 365;
-
+    const durationDays = product.name.includes("Semanal") ? 7 : product.name.includes("Mensual") ? 30 : 365;
     const expirationDate = new Date();
     expirationDate.setDate(expirationDate.getDate() + durationDays);
 
@@ -175,7 +206,6 @@ export const AuthProvider = ({ children }) => {
           }
         : u
     );
-
     setUsers(updatedUsers);
   };
 
@@ -275,7 +305,7 @@ export const AuthProvider = ({ children }) => {
     setUsers(updated);
   }, []);
 
-  return (
+return (
     <AuthContext.Provider
       value={{
         user,
@@ -290,6 +320,7 @@ export const AuthProvider = ({ children }) => {
         purchaseMembership,
         setUsers,
         setUser,
+        products,
       }}
     >
       {children}

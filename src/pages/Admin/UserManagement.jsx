@@ -1,5 +1,4 @@
 import { useAuth } from "../../context/AuthContext";
-import { products } from "../../data/products";
 import { useState } from "react";
 
 export default function UserManagement() {
@@ -9,6 +8,7 @@ export default function UserManagement() {
     removeUser,
     giveMembership,
     removeMembership,
+    products,
   } = useAuth();
 
   const [newUser, setNewUser] = useState({
