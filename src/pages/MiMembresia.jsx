@@ -1,7 +1,7 @@
 import { useAuth } from "../context/AuthContext";
 
 export default function MiMembresia() {
-  const { user, removeMembership } = useAuth();
+  const { user } = useAuth();
 
   if (!user) {
     return (
@@ -34,11 +34,8 @@ export default function MiMembresia() {
 
           <button
             onClick={() => {
-              if (
-                window.confirm("¿Seguro que quieres cancelar tu membresía actual?")
-              ) {
-                removeMembership(user.email);
-              }
+              alert("⚠️ Función de cancelar membresía en desarrollo");
+              // TODO: Implementar con backend
             }}
             className="cancel-btn"
           >

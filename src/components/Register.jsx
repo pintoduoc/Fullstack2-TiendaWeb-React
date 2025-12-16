@@ -17,12 +17,13 @@ const Register = ({ onClose, switchToLogin }) => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
 
-    const result = register(formData);
+    const result = await register(formData.email, formData.password, formData.name);
     if (result?.success) {
+      alert("✅ Usuario registrado exitosamente. Ahora puedes iniciar sesión.");
       onClose();
     } else {
       setError(result?.message || "❌ Error al registrar usuario");

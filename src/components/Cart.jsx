@@ -1,10 +1,8 @@
 import React, { useState } from "react";
-import { useAuth } from "../context/AuthContext";
 import PaymentForm from "./PaymentForm";
 
 const Cart = ({ isOpen, onClose, cart, removeFromCart, updateQuantity }) => {
   const [isPaymentOpen, setIsPaymentOpen] = useState(false);
-  const { user, users, giveMembership, setUser } = useAuth();
 
   // Calcula el total
   const total =
@@ -14,56 +12,9 @@ const Cart = ({ isOpen, onClose, cart, removeFromCart, updateQuantity }) => {
 
   // Acción al confirmar pago
   const handlePaymentConfirm = (data) => {
-    // Verificar si el email existe en la base de usuarios
-    const account = users.find((u) => u.email === data.email);
-    if (!account) {
-      alert("❌ El correo ingresado no pertenece a una cuenta. Crea una cuenta o usa otro correo.");
-      return;
-    }
-
-    // Otorgar membresía por cada item del carrito (cantidad veces si aplica)
-    for (const item of cart) {
-      // Si hay cantidades, podemos otorgar una sola vez por tipo (membresías normalmente no se acumulan)
-      giveMembership(account.email, item.id);
-    }
-
-    // Si el correo de compra coincide con el usuario logueado, refrescar su estado local
-    if (user && user.email === account.email) {
-      // Encontrar el último producto comprado (si se compró más de uno, tomamos el primero del carrito)
-      const purchased = cart[0];
-      if (purchased) {
-        const now = new Date();
-        const durationDays = purchased.name.includes("Semanal")
-          ? 7
-          : purchased.name.includes("Mensual")
-          ? 30
-          : 365;
-        const expirationDate = new Date(now);
-        expirationDate.setDate(now.getDate() + durationDays);
-
-        const updatedCurrent = {
-          ...user,
-          membership: {
-            id: purchased.id,
-            name: purchased.name,
-            price: purchased.price,
-            description: purchased.description,
-            expiresAt: expirationDate.toISOString(),
-          },
-          history: [
-            ...(user.history || []),
-            {
-              action: "purchase",
-              name: purchased.name,
-              date: new Date().toISOString(),
-            },
-          ],
-          totalSpent: (user.totalSpent || 0) + purchased.price,
-        };
-        setUser(updatedCurrent);
-        localStorage.setItem("user", JSON.stringify(updatedCurrent));
-      }
-    }
+    // TODO: Implementar lógica de pago con el backend
+    console.log("💳 Procesando pago:", data);
+    console.log("🛒 Carrito:", cart);
 
     alert(`✅ Pago confirmado por ${data.name} (${data.email}). Membresía asignada.`);
 

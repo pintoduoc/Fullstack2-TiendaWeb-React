@@ -1,15 +1,9 @@
-import { useAuth } from "../../context/AuthContext";
 import { useState } from "react";
 
 export default function UserManagement() {
-  const {
-    users,
-    addUser,
-    removeUser,
-    giveMembership,
-    removeMembership,
-    products,
-  } = useAuth();
+  // TODO: Implementar gestión de usuarios con el backend
+  const users = [];
+  const products = [];
 
   const [newUser, setNewUser] = useState({
     name: "",
@@ -31,14 +25,16 @@ export default function UserManagement() {
       return;
     }
 
-    addUser(newUser);
+    // TODO: Implementar con backend
+    alert("⚠️ Función de agregar usuario en desarrollo");
     setNewUser({ name: "", email: "", password: "" });
   };
 
   const handleGiveMembership = (email) => {
     const productId = selectedMembership[email];
     if (!productId) return alert("Selecciona un tipo de membresía.");
-    giveMembership(email, productId);
+    // TODO: Implementar con backend
+    alert("⚠️ Función de asignar membresía en desarrollo");
   };
 
   return (
@@ -152,11 +148,11 @@ export default function UserManagement() {
                   </>
                 )}
                 {u.membership && (
-                  <button onClick={() => removeMembership(u.email)}>
+                  <button onClick={() => alert("⚠️ Función en desarrollo")}>
                     ❌ Quitar Membresía
                   </button>
                 )}
-                <button onClick={() => removeUser(u.email)}>🗑️ Eliminar</button>
+                <button onClick={() => alert("⚠️ Función en desarrollo")}>🗑️ Eliminar</button>
               </td>
             </tr>
           ))}

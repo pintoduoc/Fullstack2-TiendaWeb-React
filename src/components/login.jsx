@@ -2,12 +2,12 @@ import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 
 const Login = ({ onClose, switchToRegister }) => {
+  const { login } = useAuth();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
   const [error, setError] = useState("");
-  const { login } = useAuth();
 
   const handleChange = (e) => {
     setFormData({
@@ -16,11 +16,11 @@ const Login = ({ onClose, switchToRegister }) => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
 
-    const result = login(formData.email, formData.password);
+    const result = await login(formData.email, formData.password);
     if (!result?.success) {
       setError(result?.message || "❌ Credenciales incorrectas");
       return;
